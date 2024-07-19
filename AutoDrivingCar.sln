@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoDrivingCar", "AutoDrivingCar\AutoDrivingCar.csproj", "{6453F2E8-B8B6-46B8-9A71-E41D3E46D16F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoDrivingCarTests", "AutoDrivingCarTests\AutoDrivingCarTests.csproj", "{935F84F2-63BB-4796-A7B5-A925A00401C0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6453F2E8-B8B6-46B8-9A71-E41D3E46D16F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6453F2E8-B8B6-46B8-9A71-E41D3E46D16F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6453F2E8-B8B6-46B8-9A71-E41D3E46D16F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6453F2E8-B8B6-46B8-9A71-E41D3E46D16F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{935F84F2-63BB-4796-A7B5-A925A00401C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{935F84F2-63BB-4796-A7B5-A925A00401C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{935F84F2-63BB-4796-A7B5-A925A00401C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{935F84F2-63BB-4796-A7B5-A925A00401C0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
