@@ -22,6 +22,8 @@ public class Simulation : ISimulation
 
     public IEnumerable<ICar> GetCars() => _field.Cars().Values;
 
+    public bool ContainsCar(string name) => _field.Cars().ContainsKey(name);
+
     public Dictionary<string, List<ICar>> GetCollisions() => _field.Collisions();
 
     public void AddCar(string name, Coordinate coordinate, string facing, string commands) =>

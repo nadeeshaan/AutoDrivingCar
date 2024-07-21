@@ -35,7 +35,7 @@ public class AddCarState : ISimulationState
         if (string.IsNullOrWhiteSpace(userInput))
         {
             simulation.SetState(new AddCarState());
-            return $"Invalid input {userInput} found";
+            return ISimulationState.InvalidInput(userInput);
         }
 
         switch (_carOptionsSetting)
@@ -52,11 +52,10 @@ public class AddCarState : ISimulationState
             case CarOptionsSetting.Complete:
                 return HandleCompletion(simulation, userInput);
             default:
-                simulation.SetState(new CaptureAndRunSimulationState());
-                break;
+                throw new ArgumentException("Invalid Options Setting");
         }
 
-        return "";
+        return string.Empty;
     }
 
     private void SetCommand(ISimulation simulation, string userInput)
@@ -86,11 +85,23 @@ public class AddCarState : ISimulationState
             return;
         }
 
-        Console.WriteLine($"Invalid input {userInput} found");
+        Console.WriteLine(ISimulationState.InvalidInput(userInput));
     }
 
     private void SetName(ISimulation simulation, string userInput)
     {
+        if (string.IsNullOrWhiteSpace(userInput))
+        {
+            Console.WriteLine(ISimulationState.InvalidInput("empty value"));
+            return;
+        }
+
+        if (simulation.ContainsCar(userInput))
+        {
+            Console.WriteLine($"You have already added a car with the name {userInput}");
+            return;
+        }
+
         _name = userInput;
         _carOptionsSetting = CarOptionsSetting.Coordinates;
         simulation.SetState(this);
@@ -101,10 +112,10 @@ public class AddCarState : ISimulationState
         if (int.TryParse(userInput, out var option) && option is 1 or 2)
         {
             simulation.SetState(option is 1 ? new AddCarState() : new RunSimulationState());
-            return "";
+            return string.Empty;
         }
 
-        simulation.SetState(new CaptureAndRunSimulationState());
-        return $"Invalid input {userInput} found";
+        simulation.SetState(new AddCarOrRunSimulationState());
+        return ISimulationState.InvalidInput(userInput);
     }
 }

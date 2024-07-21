@@ -9,6 +9,8 @@ public interface ISimulationState
     public string Process(ISimulation simulation, string userInput);
 
     public bool WaitForUserInput() => true;
+
+    protected static string InvalidInput(string input) => $"Invalid input {input} found";
 }
 
 internal static class CarsExtension

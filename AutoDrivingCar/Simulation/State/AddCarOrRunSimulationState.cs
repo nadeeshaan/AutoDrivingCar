@@ -1,6 +1,6 @@
 namespace AutoDrivingCar.Simulation.State;
 
-public class CaptureAndRunSimulationState : ISimulationState
+public class AddCarOrRunSimulationState : ISimulationState
 {
     public string Prompt(ISimulation simulation) =>
         """
@@ -15,10 +15,10 @@ public class CaptureAndRunSimulationState : ISimulationState
         if (int.TryParse(userInput, out var option) && option is 1 or 2)
         {
             simulation.SetState(option is 1 ? new AddCarState() : new RunSimulationState());
-            return "";
+            return string.Empty;
         }
 
-        simulation.SetState(new CaptureAndRunSimulationState());
-        return $"Invalid input {userInput} found";
+        simulation.SetState(new AddCarOrRunSimulationState());
+        return ISimulationState.InvalidInput(userInput);
     }
 }

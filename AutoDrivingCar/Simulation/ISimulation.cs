@@ -13,6 +13,8 @@ public interface ISimulation
 
     public IEnumerable<ICar> GetCars();
 
+    public bool ContainsCar(string name);
+
     public Dictionary<string, List<ICar>> GetCollisions();
 
     public void AddCar(string name, Coordinate coordinate, string facing, string commands);

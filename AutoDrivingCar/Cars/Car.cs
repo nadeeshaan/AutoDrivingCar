@@ -40,7 +40,7 @@ public class Car(
                 Turn(command);
                 break;
             default:
-                throw new ArgumentException($"Invalid command ${command} found");
+                throw new ArgumentException($"Invalid command {command} found");
         }
 
         _step++;

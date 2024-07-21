@@ -18,6 +18,6 @@ public class RestartOrExitState : ISimulationState
         }
 
         simulation.SetState(new RestartOrExitState());
-        return $"Invalid input {userInput} found";
+        return ISimulationState.InvalidInput(userInput);
     }
 }

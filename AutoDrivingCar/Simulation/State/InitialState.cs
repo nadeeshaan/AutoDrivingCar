@@ -16,15 +16,15 @@ public class InitialState : ISimulationState
             .Take(2)
             .ToArray();
 
-        if (int.TryParse(dimensions[0], out var xCord) && int.TryParse(dimensions[0], out var yCord))
+        if (int.TryParse(dimensions[0], out var xCord) && int.TryParse(dimensions[1], out var yCord))
         {
             simulation.SetField(xCord, yCord);
-            simulation.SetState(new CaptureAndRunSimulationState());
+            simulation.SetState(new AddCarOrRunSimulationState());
 
             return $"You have created a field of {xCord} x {yCord}.";
         }
 
         simulation.SetState(new InitialState());
-        return $"Invalid input {userInput} found";
+        return ISimulationState.InvalidInput(userInput);
     }
 }
