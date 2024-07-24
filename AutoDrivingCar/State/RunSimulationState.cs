@@ -1,26 +1,28 @@
 using System.Text;
 
-namespace AutoDrivingCar.Simulation.State;
+namespace AutoDrivingCar.State;
 
-public class RunSimulationState : ISimulationState
+public class RunSimulationState(Context context) : SimulationState(context)
 {
-    public bool WaitForUserInput() => false;
+    public override bool WaitForUserInput() => false;
 
-    public string Prompt(ISimulation simulation) =>
-        $"""
-         Your current list of cars are:
-         {simulation.GetCars().ListCars()}
-         """;
-
-    public string Process(ISimulation simulation, string userInput)
+    public override string Prompt()
     {
-        simulation.Simulate();
-        simulation.SetState(new RestartOrExitState());
+        return $"""
+                Your current list of cars are:
+                {Context.Simulator.GetCars().ListCars()}
+                """;
+    }
 
-        var uncollidedCars = simulation.GetCars()
-            .Where(car => simulation.GetCollisions()[car.Name()].Count == 0)
+    public override string Process(string userInput)
+    {
+        Context.Simulator.Simulate();
+        Context.State = new RestartOrExitState(Context);
+
+        var uncollidedCars = Context.Simulator.GetCars()
+            .Where(car => Context.Simulator.GetCollisions()[car.Name].Count == 0)
             .ToList().PositionInfo();
-        var collisionDetails = simulation.GetCollisions()
+        var collisionDetails = Context.Simulator.GetCollisions()
             .Where(pair => pair.Value.Count > 0).ToDictionary()
             .CollisionInfo();
 

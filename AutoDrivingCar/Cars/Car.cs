@@ -2,84 +2,84 @@ using AutoDrivingCar.Simulation;
 
 namespace AutoDrivingCar.Cars;
 
-public class Car(
-    string name,
-    Coordinate coordinate,
-    string facing,
-    string commands,
-    Dimensions dimensions) : ICar
+public class Car
 {
-    private static readonly List<string> DirectionList = ["N", "E", "S", "W"];
-    private int _directionIndex = DirectionList.IndexOf(facing);
-    private int _step;
-    private bool _moving = true;
+    private int _directionIndex;
 
-    public bool Moving() => _moving;
-    public string Commands() => commands;
-    public string Name() => name;
-    public Coordinate Coordinate() => coordinate;
-    public string Facing() => DirectionList[_directionIndex];
-    public int Step() => _step;
+    public Car(string name, Coordinate coordinate, Direction facing, string commands, Dimensions dimensions)
+    {
+        Name = name;
+        Commands = commands;
+        Coordinate = coordinate;
+        Dimensions = dimensions;
+        _directionIndex = (int)facing;
+    }
+
+    public bool Moving { get; private set; } = true;
+    public string Commands { get; }
+    public string Name { get; private set; }
+    public Coordinate Coordinate { get; private set; }
+
+    public Dimensions Dimensions { get; }
+
+    public Direction Facing => (Direction)Enum.GetValues(typeof(Direction)).GetValue(_directionIndex);
+
+    public int CurrentStep { get; private set; }
 
     public void Move()
     {
-        if (_step >= commands.Length)
+        if (CurrentStep >= Commands.Length)
         {
-            _moving = false;
+            Moving = false;
             return;
         }
 
-        var command = commands[_step].ToString();
-        switch (command)
+        if (Enum.TryParse(Commands[CurrentStep].ToString(), true, out Command command))
         {
-            case "F":
-                Forward();
-                break;
-            case "L":
-            case "R":
-                Turn(command);
-                break;
-            default:
-                throw new ArgumentException($"Invalid command {command} found");
+            switch (command)
+            {
+                case Command.F:
+                    Forward();
+                    break;
+                case Command.L:
+                    Left();
+                    break;
+                case Command.R:
+                    Right();
+                    break;
+            }
+
+            CurrentStep++;
+            return;
         }
 
-        _step++;
+        throw new ArgumentException($"Invalid command {Commands[CurrentStep]} found");
     }
 
     private void Forward()
     {
-        var facingDirection = DirectionList[_directionIndex];
-        var displaced = facingDirection switch
+        var displaced = Facing switch
         {
-            "N" => new Coordinate(coordinate.X, coordinate.Y + 1),
-            "E" => new Coordinate(coordinate.X + 1, coordinate.Y),
-            "S" => new Coordinate(coordinate.X, coordinate.Y - 1),
-            "W" => new Coordinate(coordinate.X - 1, coordinate.Y),
-            _ => throw new ArgumentException($"Invalid direction ${facingDirection} found")
+            Direction.N => new Coordinate(Coordinate.X, Coordinate.Y + 1),
+            Direction.E => new Coordinate(Coordinate.X + 1, Coordinate.Y),
+            Direction.S => new Coordinate(Coordinate.X, Coordinate.Y - 1),
+            _ => new Coordinate(Coordinate.X - 1, Coordinate.Y),
         };
 
         if (WithinField(displaced))
         {
-            coordinate = displaced;
+            Coordinate = displaced;
         }
     }
 
     private bool WithinField(Coordinate coord) =>
-        coord.X >= 0 && coord.X < dimensions.Width && coord.Y >= 0 && coord.Y < dimensions.Height;
+        coord.X >= 0 && coord.X < Dimensions.Width && coord.Y >= 0 && coord.Y < Dimensions.Height;
 
-    private void Turn(string direction)
+    private void Left() => _directionIndex -= _directionIndex == 0 ? 1 - Enum.GetValues(typeof(Direction)).Length : 1;
+
+    private void Right()
     {
-        var directionsEndIndex = DirectionList.Count - 1;
-        switch (direction)
-        {
-            case "L":
-                _directionIndex -= _directionIndex == 0 ? -directionsEndIndex : 1;
-                break;
-            case "R":
-                _directionIndex += _directionIndex == directionsEndIndex ? -directionsEndIndex : 1;
-                break;
-            default:
-                throw new ArgumentException($"Invalid input ${direction} found");
-        }
+        var directionsEndIndex = Enum.GetValues(typeof(Direction)).Length - 1;
+        _directionIndex += _directionIndex == directionsEndIndex ? -directionsEndIndex : 1;
     }
 }

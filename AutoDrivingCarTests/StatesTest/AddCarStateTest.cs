@@ -1,46 +1,55 @@
-using AutoDrivingCar.Cars;
 using AutoDrivingCar.Simulation;
-using AutoDrivingCar.Simulation.State;
-using Moq;
+using AutoDrivingCar.State;
 using Xunit;
 
 namespace AutoDrivingCarTests.StatesTest;
 
-public class AddCarStateTest
+public class AddCarStateTest : IDisposable
 {
+    private Simulator _simulator;
+    private AddCarState _addCarState;
+    private Context _context;
+
+    public AddCarStateTest()
+    {
+        _simulator = new Simulator();
+        _simulator.SetField(10, 10);
+        _context = new Context(_simulator);
+        _addCarState = new AddCarState(_context);
+    }
+
+    [Fact]
+    public void TestProcessingEmptyUserInput()
+    {
+        var processedOutput = _addCarState.Process("");
+        Assert.Equal("Invalid input  found", processedOutput);
+        Assert.IsType<AddCarState>(_context.State);
+    }
+
     [Fact]
     public void TestAddCarState()
     {
-        var addCarState = new AddCarState();
-        var simulationMock = new Mock<ISimulation>(MockBehavior.Default) { CallBase = true };
-
-        simulationMock.Setup(s =>
-            s.AddCar(It.IsAny<string>(), It.IsAny<Coordinate>(), It.IsAny<string>(), It.IsAny<string>()));
-        simulationMock.Setup(s => s.GetCars()).Returns(() => new[]
-            { new Car("A", new Coordinate(1, 2), "N", "FFRRFF", new Dimensions(10, 10)) });
-        var simulation = simulationMock.Object;
-
-        var processOutput = addCarState.Process(simulation, "");
+        var processOutput = _addCarState.Process("");
         Assert.Equal("Invalid input  found", processOutput);
-        simulationMock.Verify(s => s.SetState(It.IsAny<AddCarState>()));
+        Assert.IsType<AddCarState>(_context.State);
 
-        var promptName = addCarState.Prompt(simulation);
-        addCarState.Process(simulation, "A");
+        var promptName = _addCarState.Prompt();
+        _addCarState.Process("A");
         Assert.Equal("Please enter the name of the car:", promptName);
-        simulationMock.Verify(s => s.SetState(It.IsAny<AddCarState>()));
+        Assert.IsType<AddCarState>(_context.State);
 
-        var promptCoordinates = addCarState.Prompt(simulation);
-        addCarState.Process(simulation, "1 2 N");
+        var promptCoordinates = _addCarState.Prompt();
+        _addCarState.Process("1 2 N");
         Assert.Equal("Please enter initial position of car A in x y Direction format:", promptCoordinates);
-        simulationMock.Verify(s => s.SetState(It.IsAny<AddCarState>()));
+        Assert.IsType<AddCarState>(_context.State);
 
-        var promptCommands = addCarState.Prompt(simulation);
-        addCarState.Process(simulation, "FFRRFF");
+        var promptCommands = _addCarState.Prompt();
+        _addCarState.Process("FFRRFF");
         Assert.Equal("Please enter the commands for car A:", promptCommands);
-        simulationMock.Verify(s => s.SetState(It.IsAny<AddCarState>()));
+        Assert.IsType<AddCarState>(_context.State);
 
-        var completeStatePrompt = addCarState.Prompt(simulation);
-        addCarState.Process(simulation, "1");
+        var completeStatePrompt = _addCarState.Prompt();
+        _addCarState.Process("1");
         var expectedPrompt =
             """
             Your current list of cars are:
@@ -51,9 +60,16 @@ public class AddCarStateTest
             [2] Run simulation
             """;
         Assert.Equal(expectedPrompt, completeStatePrompt);
-        simulationMock.Verify(s => s.SetState(It.IsAny<AddCarState>()));
+        Assert.IsType<AddCarState>(_context.State);
 
-        addCarState.Process(simulation, "2");
-        simulationMock.Verify(s => s.SetState(It.IsAny<RunSimulationState>()));
+        _addCarState.Process("2");
+        Assert.IsType<RunSimulationState>(_context.State);
+    }
+
+    public void Dispose()
+    {
+        _simulator = null;
+        _addCarState = null;
+        _context = null;
     }
 }

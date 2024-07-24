@@ -1,24 +1,27 @@
 using AutoDrivingCar.Simulation;
-using AutoDrivingCar.Simulation.State;
+using AutoDrivingCar.State;
 using Xunit;
 
 namespace AutoDrivingCarTests.StatesTest;
 
 public class AddCarOrRunSimulationTest : IDisposable
 {
-    private ISimulation _simulation;
-    private ISimulationState? _simulationState;
+    private Simulator _simulator;
+    private AddCarOrRunSimulationState? _simulationState;
+    private Context _context;
 
     public AddCarOrRunSimulationTest()
     {
-        _simulation = new Simulation();
-        _simulationState = new AddCarOrRunSimulationState();
+        _simulator = new Simulator();
+        _simulator.SetField(10, 10);
+        _context = new Context(_simulator);
+        _simulationState = new AddCarOrRunSimulationState(_context);
     }
 
     [Fact]
     public void TestStatePrompt()
     {
-        var prompt = _simulationState!.Prompt(_simulation);
+        var prompt = _simulationState!.Prompt();
         Assert.Equal("""
 
                      Please choose from the following options:
@@ -30,30 +33,31 @@ public class AddCarOrRunSimulationTest : IDisposable
     [Fact]
     public void TestInvalidInput()
     {
-        var processOutput = _simulationState!.Process(_simulation, "1345");
-        Assert.IsType<AddCarOrRunSimulationState>(_simulation.GetState());
+        var processOutput = _simulationState!.Process("1345");
+        Assert.IsType<AddCarOrRunSimulationState>(_context.State);
         Assert.Equal("Invalid input 1345 found", processOutput);
     }
 
     [Fact]
     public void TestAddCarStateOnInput()
     {
-        var processOutput = _simulationState!.Process(_simulation, "1");
-        Assert.IsType<AddCarState>(_simulation.GetState());
+        var processOutput = _simulationState!.Process("1");
+        Assert.IsType<AddCarState>(_context.State);
         Assert.Empty(processOutput);
     }
 
     [Fact]
     public void TestRunSimulationStateOnInput()
     {
-        var processOutput = _simulationState!.Process(_simulation, "2");
-        Assert.IsType<RunSimulationState>(_simulation.GetState());
+        var processOutput = _simulationState!.Process("2");
+        Assert.IsType<RunSimulationState>(_context.State);
         Assert.Empty(processOutput);
     }
 
     public void Dispose()
     {
-        _simulation = null;
+        _simulator = null;
         _simulationState = null;
+        _context = null;
     }
 }
