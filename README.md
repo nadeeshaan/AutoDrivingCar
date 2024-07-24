@@ -79,6 +79,8 @@ Execute `dotnet test`
 ### Run the Solution
 
 Execute `dotnet run --project <path/to/AutoDrivingCar.csproj>`
+Or
+Execute `project/root/AutoDrivingCar/bin/Debug/net8.0/AutoDrivingCar.exe`
 
 ## Example run
 
