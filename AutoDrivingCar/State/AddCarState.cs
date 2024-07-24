@@ -1,9 +1,13 @@
+using System.Text.RegularExpressions;
 using AutoDrivingCar.Simulation;
 
 namespace AutoDrivingCar.State;
 
-public class AddCarState(Context context) : SimulationState(context)
+public partial class AddCarState(Context context) : SimulationState(context)
 {
+    private const int AddCarInputOption = 1;
+    private const int RunSimulationInputOption = 2;
+
     private CarOptionsSetting _carOptionsSetting = CarOptionsSetting.Name;
     private string _name = null!;
     private Coordinate _coordinate;
@@ -65,8 +69,7 @@ public class AddCarState(Context context) : SimulationState(context)
 
     private string SetCoordinates(Context context, string userInput)
     {
-        var dimensions = userInput.Split((char[])null, StringSplitOptions.RemoveEmptyEntries)
-            .Where(s => !string.IsNullOrWhiteSpace(s))
+        var dimensions = WhitespaceRegex().Split(userInput)
             .Take(3)
             .ToArray();
 
@@ -106,13 +109,16 @@ public class AddCarState(Context context) : SimulationState(context)
 
     private string HandleCompletion(string userInput)
     {
-        if (int.TryParse(userInput, out var option) && option is 1 or 2)
+        if (int.TryParse(userInput, out var option) && option is AddCarInputOption or RunSimulationInputOption)
         {
-            Context.State = option is 1 ? new AddCarState(Context) : new RunSimulationState(Context);
+            Context.State = option is AddCarInputOption ? new AddCarState(Context) : new RunSimulationState(Context);
             return string.Empty;
         }
 
         Context.State = new AddCarOrRunSimulationState(Context);
         return ISimulationState.InvalidInput(userInput);
     }
+
+    [GeneratedRegex(@"\s+")]
+    private static partial Regex WhitespaceRegex();
 }

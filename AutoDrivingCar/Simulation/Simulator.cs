@@ -4,7 +4,7 @@ namespace AutoDrivingCar.Simulation;
 
 public class Simulator
 {
-    private Field _field;
+    private Field _field = null!;
 
     public void SetField(int x, int y) => _field = new Field(new Dimensions(x, y));
 

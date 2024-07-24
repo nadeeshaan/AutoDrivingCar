@@ -15,7 +15,7 @@ public class Car
         _directionIndex = (int)facing;
     }
 
-    public bool Moving { get; private set; } = true;
+    public bool Moving { get; set; } = true;
     public string Commands { get; }
     public string Name { get; private set; }
     public Coordinate Coordinate { get; private set; }
