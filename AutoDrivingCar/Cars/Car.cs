@@ -15,9 +15,9 @@ public class Car
         _directionIndex = (int)facing;
     }
 
-    public bool Moving { get; set; } = true;
+    public bool CanAcceptCommands { get; private set; } = true;
     public string Commands { get; }
-    public string Name { get; private set; }
+    public string Name { get; }
     public Coordinate Coordinate { get; private set; }
 
     public Dimensions Dimensions { get; }
@@ -30,7 +30,7 @@ public class Car
     {
         if (CurrentStep >= Commands.Length)
         {
-            Moving = false;
+            CanAcceptCommands = false;
             return;
         }
 
@@ -81,5 +81,20 @@ public class Car
     {
         var directionsEndIndex = Enum.GetValues(typeof(Direction)).Length - 1;
         _directionIndex += _directionIndex == directionsEndIndex ? -directionsEndIndex : 1;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (obj is not Car car)
+        {
+            return false;
+        }
+
+        return Name == car.Name;
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Name);
     }
 }

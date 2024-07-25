@@ -14,4 +14,9 @@ public readonly struct Coordinate(int x, int y)
 
         return x == coordinate.X && y == coordinate.Y;
     }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(X, Y);
+    }
 }

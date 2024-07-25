@@ -18,8 +18,8 @@ public class FieldTests : IDisposable
     [Fact]
     public void TestNoCollisions()
     {
-        _field.Cars().Add("A", new Car("A", new Coordinate(1, 2), Direction.N, "FFRFFFLFLL", _dimensions));
-        _field.Cars().Add("B", new Car("B", new Coordinate(7, 8), Direction.W, "FFLFFFFFFF", _dimensions));
+        _field.AddCar(new Car("A", new Coordinate(1, 2), Direction.N, "FFRFFFLFLL", _dimensions));
+        _field.AddCar(new Car("B", new Coordinate(7, 8), Direction.W, "FFLFFFFFFF", _dimensions));
         _field.Simulate();
 
         Assert.Empty(_field.Collisions()["A"]);
@@ -29,8 +29,8 @@ public class FieldTests : IDisposable
     [Fact]
     public void TestCollisions()
     {
-        _field.Cars().Add("A", new Car("A", new Coordinate(1, 2), Direction.N, "FFRFFFFRRL", _dimensions));
-        _field.Cars().Add("B", new Car("B", new Coordinate(7, 8), Direction.W, "FFLFFFFFFF", _dimensions));
+        _field.AddCar(new Car("A", new Coordinate(1, 2), Direction.N, "FFRFFFFRRL", _dimensions));
+        _field.AddCar(new Car("B", new Coordinate(7, 8), Direction.W, "FFLFFFFFFF", _dimensions));
         _field.Simulate();
 
         var collisions = _field.Collisions();

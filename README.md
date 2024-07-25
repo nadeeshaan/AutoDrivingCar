@@ -41,10 +41,8 @@ In this implementation, there are four major components as described bellow.
 ### Handling the cars with different number of commands
 
 - The `Field` implementation is responsible for moving the cars.
-- Field is running through a loop, until it finds out that there are no remaining moveable cars
-- Field will decide the moving state of a car if the car's `Moving` flag is false
-- Car's `Moving` state will be changed if its commands have been ran out or, if the car has been collided. The latter
-  will be decided by the field since the car is driven by the simulation and field has the knowledge on other cars.
+- Field is running through a loop, until it finds out that there are no remaining movable cars
+- Car's `Moving` state will be changed if its commands have been ran out.
 - Running out of commands will be keeping track by the car it self and decide whether to stop
 - Refer to `FieldTests` for the use-cases
 #### State Machine

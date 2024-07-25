@@ -84,6 +84,6 @@ public class CarTest
         car.Move();
         car.Move();
 
-        Assert.False(car.Moving);
+        Assert.False(car.CanAcceptCommands);
     }
 }
